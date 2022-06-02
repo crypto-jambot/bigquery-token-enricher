@@ -1,0 +1,14 @@
+{
+    "isLocal": false,
+    "blockchain": "ethereum",
+    "nodeProvider": "ALCHEMY",
+    "useAlchemyWrapper": true,
+    "numberToProcess": 10000,
+    "processAsynchronously": false,
+    "synchronousLogFrequently": 2,
+    "uploadToBigQuery": true,
+    "tableId": "erc20_tokens",
+    "saveLocalFile": true,
+    "outputFilepath": "./output/erc20Tokens.jsonl",
+    "appendToFile": true
+}
