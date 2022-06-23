@@ -1,0 +1,12 @@
+{
+  "isLocal": false,
+  "bqDataset": "ethereum",
+  "bqTable": "erc20_tokens",
+  "nodeProvider": "INFURA",
+  "processAsynchronously": true,
+  "synchronousLogFrequently": 10,
+  "uploadToBigQuery": true,
+  "saveLocalFile": false,
+  "outputFilepath": "./output/erc20Tokens.jsonl",
+  "appendToFile": true
+}
