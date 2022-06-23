@@ -11,7 +11,7 @@ import settings from '../config/settings.json';
 import { BigQuery } from '@google-cloud/bigquery';
 
 export const queryTokens = async (numberToProcess) => {
-    const queryString = `SELECT * FROM \`crypto-351521.ethereum.tokens_awaiting_enrichment\` LIMIT ${settings.numberToProcess}`;
+    const queryString = `SELECT * FROM \`crypto-351521.ethereum.tokens_awaiting_enrichment\` LIMIT ${numberToProcess}`;
     const rows = await query(queryString);
     // Flatten Array of objects to Array of strings and return.
     return rows.map((row) => row.token_address);
