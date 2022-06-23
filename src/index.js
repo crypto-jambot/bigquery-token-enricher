@@ -18,6 +18,7 @@ import { queryTokens, enrichTokens, enrichTokensSync } from './util/util';
 import erc20TokenSchema from './resources/schemas/erc20_tokens_schema.json';
 
 export const main = async (numberToProcess) => {
+    let result;
     // Start Timer
     let start = new Date();
     console.log(`Start Time is: ${start}`);
@@ -38,7 +39,6 @@ export const main = async (numberToProcess) => {
     });
 
     let enrichedTokens;
-    let result;
     // If processing synchronously, get and enrich tokens one by one.
     if (!settings.processAsynchronously) {
         enrichedTokens = await enrichTokensSync(tokenContracts, settings.synchronousLogFrequently);
