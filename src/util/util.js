@@ -20,7 +20,7 @@ export const queryTokens = async (numberToProcess) => {
 export const enrichTokens = async (tokenContracts) => {
     console.log('Fetching token info.');
     const enrichedTokens = [];
-    for (tokenContract of tokenContracts) {
+    for (const tokenContract of tokenContracts) {
         enrichedTokens.push(enrichToken(tokenContract));
     }
     return Promise.all(enrichedTokens);

@@ -12,6 +12,7 @@ import fs from 'fs';
 import { web3 } from './setup/setup';
 import { BigQuery } from '@google-cloud/bigquery';
 import settings from './config/settings.json';
+import * as Constants from './constants/constants';
 import IERC20 from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import { queryTokens, enrichTokens, enrichTokensSync } from './util/util';
 import erc20TokenSchema from './resources/schemas/erc20_tokens_schema.json';
@@ -37,6 +38,7 @@ export const main = async (numberToProcess) => {
     });
 
     let enrichedTokens;
+    let result;
     // If processing synchronously, get and enrich tokens one by one.
     if (!settings.processAsynchronously) {
         enrichedTokens = await enrichTokensSync(tokenContracts, settings.synchronousLogFrequently);
@@ -111,7 +113,7 @@ export const main = async (numberToProcess) => {
     }
     result = {
         status: 200,
-        message: `Operation Successful. Enriched ${output.length} tokens into the table: ${settings.bqTable}.`,
+        message: `Operation Successful. Enriched ${output.length} tokens and inserted into the table: ${settings.bqTable}.`,
     };
     console.log(result);
     return result;
