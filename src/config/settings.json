@@ -1,12 +1,12 @@
 {
   "isLocal": false,
-  "bqDataset": "ethereum",
+  "bqDataset": "polygon",
   "bqTable": "erc20_tokens",
-  "nodeProvider": "INFURA",
+  "nodeProvider": "CHAINSTACK_POLYGON",
   "processAsynchronously": true,
   "synchronousLogFrequently": 10,
   "uploadToBigQuery": true,
-  "saveLocalFile": false,
-  "outputFilepath": "./output/erc20Tokens.jsonl",
-  "appendToFile": true
+  "saveLocalFile": true,
+  "outputFilepath": "./src/output/erc20Tokens.jsonl",
+  "appendToFile": false
 }

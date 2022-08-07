@@ -11,7 +11,7 @@ import settings from '../config/settings.json';
 import { BigQuery } from '@google-cloud/bigquery';
 
 export const queryTokens = async (numberToProcess) => {
-    const queryString = `SELECT * FROM \`crypto-351521.ethereum.tokens_awaiting_enrichment\` LIMIT ${numberToProcess}`;
+    const queryString = `SELECT * FROM \`crypto-351521.${settings.bqDataset}.tokens_awaiting_enrichment\` LIMIT ${numberToProcess}`;
     const rows = await query(queryString);
     // Flatten Array of objects to Array of strings and return.
     return rows.map((row) => row.token_address);
@@ -54,12 +54,19 @@ const query = async (queryString) => {
 };
 
 const enrichToken = async (tokenContract) => {
-    return {
+    const enrichedToken = {
         name: await getTokenName(tokenContract),
         symbol: await getTokenSymbol(tokenContract),
         address: tokenContract._address,
         decimals: await getTokenDecimals(tokenContract),
     };
+    // if (
+    //     enrichedToken.name != null &&
+    //     enrichedToken.symbol != null &&
+    //     enrichedToken.decimals != null
+    // )
+    //     console.log('Valid');
+    return enrichedToken;
 };
 
 const getTokenName = async (tokenContract) => {
@@ -67,6 +74,7 @@ const getTokenName = async (tokenContract) => {
     try {
         name = await tokenContract.methods.name().call();
     } finally {
+        // if (name != null) console.log(`name: ${name}`);
         return name;
     }
 };
@@ -76,6 +84,7 @@ const getTokenSymbol = async (tokenContract) => {
     try {
         symbol = await tokenContract.methods.symbol().call();
     } finally {
+        // if (symbol != null) console.log(`symbol: ${symbol}`);
         return symbol;
     }
 };
@@ -85,6 +94,7 @@ const getTokenDecimals = async (tokenContract) => {
     try {
         decimals = await tokenContract.methods.decimals().call();
     } finally {
+        // if (decimals != null) console.log(`decimals: ${decimals}`);
         return decimals;
     }
 };

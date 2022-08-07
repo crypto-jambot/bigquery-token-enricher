@@ -18,8 +18,8 @@ import { queryTokens, enrichTokens, enrichTokensSync } from './util/util';
 import erc20TokenSchema from './resources/schemas/erc20_tokens_schema.json';
 
 export const main = async (numberToProcess) => {
-    let result;
     // Start Timer
+    let result;
     let start = new Date();
     console.log(`Start Time is: ${start}`);
     console.log('Fetching Tokens from BigQuery to enrich...');
@@ -43,16 +43,6 @@ export const main = async (numberToProcess) => {
     if (!settings.processAsynchronously) {
         enrichedTokens = await enrichTokensSync(tokenContracts, settings.synchronousLogFrequently);
     } else {
-        // Must use Infura when process asynchronously.
-        if (settings.nodeProvider != Constants.INFURA) {
-            result = {
-                status: 500,
-                message:
-                    'Usage: Must use Infura as a node provider in order to process asynchronously.',
-            };
-            console.log(result);
-            return result;
-        }
         enrichedTokens = await enrichTokens(tokenContracts);
     }
 
