@@ -27,7 +27,7 @@ export const ALCHEMY_WRAPPER_ETH_ENDPOINT = 'wss://eth-mainnet.ws.alchemyapi.io/
 export const INFURA_ETH_ENDPOINT = 'wss://mainnet.infura.io/ws/v3/';
 export const GET_BLOCK_BSC_ENDPOINT = 'wss://bsc.getblock.io/mainnet/?api_key=';
 export const CHAINSTACK_BSC_ENDPOINT = 'https://nd-702-884-701.p2pify.com/17c521a5a55bb46de0aee62d76b6ca5a';
-export const CHAINSTACK_POLYGON_ENDPOINT = 'wss://ws-nd-098-564-968.p2pify.com/4e267bf795c27e77369c881438fa2289';
+export const CHAINSTACK_POLYGON_ENDPOINT = 'wss://ws-nd-877-676-882.p2pify.com/8e9bbeb7da455bdd863ad4b589e1a6d5';
 export const QUICKNODE_BSC_ENDPOINT = 'wss://falling-solitary-sky.bsc.discover.quiknode.pro/69687f29629c71e4dacb52cea654a77499eb3d14/';
 export const MORALIS_BSC_ENDPOINT = 'https://gxdngbahir1a.usemoralis.com:2053/server';
 export const LOCALHOST_ETH_ENDPOINT = 'ws://127.0.0.1:7545';
