@@ -1,8 +1,4 @@
 steps:
-  - name: gcr.io/cloud-builders/npm
-    id: Installing dependencies
-    entrypoint: npm
-    args: ['ci']
   - name: gcr.io/cloud-builders/docker
     id: Dockerizing application
     args:
@@ -12,6 +8,8 @@ steps:
         'deployment-config/Dockerfile',
         '-t',
         'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA',
+        '--build-arg',
+        'NPM_TOKEN=${_NPM_TOKEN}',
         '.',
       ]
   - name: gcr.io/cloud-builders/docker
