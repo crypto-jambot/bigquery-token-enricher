@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@crypto-jambot/bigquery-utils": "^1.0.1",
-    "@crypto-jambot/web3-utils": "^1.0.0-0",
+    "@crypto-jambot/web3-utils": "^1.0.0",
     "@openzeppelin/contracts": "^4.4.1",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
