@@ -32,6 +32,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install --production --engine-strict --ignore-scripts --no-package-lock
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # - name: Run tests
       #   run: npm test
       - name: Setup git config
