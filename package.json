@@ -1,6 +1,6 @@
 {
   "name": "bigquery-token-enricher",
-  "version": "1.0.1",
+  "version": "2.0.0-0",
   "description": "",
   "main": "src/server.js",
   "scripts": {
@@ -12,12 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/bigquery": "^5.12.0",
+    "@crypto-jambot/bigquery-utils": "^1.0.1",
+    "@crypto-jambot/web3-utils": "^1.0.0",
     "@openzeppelin/contracts": "^4.4.1",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "web3": "^1.7.3"
+    "express": "^4.18.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
