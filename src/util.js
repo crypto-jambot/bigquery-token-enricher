@@ -1,9 +1,8 @@
-import { JAM_ETH_NODE_HTTPS, PROJECT_ID as projectId } from "./constants.js";
-
 import axios from "axios";
 import IERC20 from "@openzeppelin/contracts/build/contracts/ERC20.json" assert { type: "json" };
 import { BigQueryUtil } from "@crypto-jambot/bigquery-utils";
 
+const projectId = process.env.PROJECT_ID;
 const { query } = new BigQueryUtil({ projectId });
 
 export const queryTokens = async (blockchain, numberToProcess) => {
@@ -61,7 +60,7 @@ function createRequest(identifier, symbolCharacter, functionType, address) {
 async function makeBatchRequest(requests, accessToken) {
     const config = {
         method: "post",
-        url: JAM_ETH_NODE_HTTPS,
+        url: process.env.JAM_ETH_NODE_HTTPS,
         headers: {
             "access-token": accessToken,
             "Content-Type": "application/json",

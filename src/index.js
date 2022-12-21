@@ -1,12 +1,15 @@
 import { queryTokens, enrichTokens, getDataset, getResponse } from "./util.js";
 import { Web3Utils } from "@crypto-jambot/web3-utils";
 import { BigQueryUtil } from "@crypto-jambot/bigquery-utils";
-import { PROJECT_ID as projectId } from "./constants.js";
+import { SecretUtil } from "@crypto-jambot/secret-manager-utils";
 
+const projectId = process.env.PROJECT_ID;
 const { insert } = new BigQueryUtil({ projectId });
+const secretUtil = new SecretUtil({ projectId });
 export const main = async (requestBody) => {
     const { blockchain, numberToProcess = 50000, chunkSize = 1 } = requestBody;
-    const utils = new Web3Utils(process.env.API_KEY);
+    const apiKey = await secretUtil.getSecretString(process.env.API_SECRET_KEY);
+    const utils = new Web3Utils(apiKey);
     const tokens = await queryTokens(blockchain, numberToProcess);
     if (tokens.length === 0) {
         return getResponse(
