@@ -15,7 +15,7 @@ export const queryTokens = async (blockchain, numberToProcess) => {
 };
 
 export const enrichTokens = async (utils, tokens, chunkSize) => {
-    const { nameFn, symbolFn, decimalsFn } = encodeFnSignatures(utils);
+    const { nameFn, symbolFn, decimalsFn } = await encodeFnSignatures(utils);
     const accessToken = await utils.getAccessToken();
     const addresses = tokens.map((address) => {
         return { address };
@@ -122,8 +122,8 @@ export function getDataset(blockchain) {
     }
 }
 
-function encodeFnSignatures(utils) {
-    const ethereum = utils.getEthereum();
+async function encodeFnSignatures(utils) {
+    const ethereum = await utils.getEthereum();
     const { abi } = ethereum;
     const { encodeFunctionSignature } = abi;
     return {
