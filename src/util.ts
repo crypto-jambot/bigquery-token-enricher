@@ -1,24 +1,55 @@
 import axios from "axios";
-import IERC20 from "@openzeppelin/contracts/build/contracts/ERC20.json" assert { type: "json" };
+import IERC20 from "@openzeppelin/contracts/build/contracts/ERC20.json";
 import { BigQueryUtil } from "@crypto-jambot/bigquery-utils";
 
 const projectId = process.env.PROJECT_ID;
 const { query } = new BigQueryUtil({ projectId });
+import { Web3Utils, AbiItem } from "@crypto-jambot/web3-utils";
 
-export const queryTokens = async (blockchain, numberToProcess) => {
+type Token = { token_address: string };
+type AddressObj = {
+    address: string;
+    name: string | null;
+    symbol: string | null;
+    decimals: number | null;
+};
+type RPCRequest = {
+    jsonrpc: string;
+    id: string;
+    method: string;
+    params: (string | { data: string; to: string })[];
+};
+type TokenSignature = {
+    nameFn: string;
+    symbolFn: string;
+    decimalsFn: string;
+};
+type Response = {
+    jsonrpc: string;
+    id: string;
+    result: string;
+};
+
+export async function queryTokens(
+    blockchain: string,
+    numberToProcess: number
+): Promise<string[]> {
     const queryString = `SELECT * FROM \`crypto-351521.${getDataset(
         blockchain
     )}.tokens_awaiting_enrichment\` LIMIT ${numberToProcess}`;
-    const rows = await query(queryString);
-    // Flatten Array of objects to Array of strings and return.
+    const rows = await query<Token>(queryString);
     return rows.map((row) => row.token_address);
-};
+}
 
-export const enrichTokens = async (utils, tokens, chunkSize) => {
+export async function enrichTokens(
+    utils: Web3Utils,
+    tokens: string[],
+    chunkSize: number
+) {
     const { nameFn, symbolFn, decimalsFn } = await encodeFnSignatures(utils);
     const accessToken = await utils.getAccessToken();
     const addresses = tokens.map((address) => {
-        return { address };
+        return { address, name: null, symbol: null, decimals: null };
     });
 
     const requests = addresses
@@ -30,7 +61,7 @@ export const enrichTokens = async (utils, tokens, chunkSize) => {
             ];
         })
         .reduce((previous, next) => {
-            if (!previous) return;
+            // if (!previous) return;
             return [...previous, ...next];
         });
     const responses = await makeChunkedRequest(
@@ -39,9 +70,14 @@ export const enrichTokens = async (utils, tokens, chunkSize) => {
         chunkSize
     );
     return parseResponses(responses, addresses, utils);
-};
+}
 
-function createRequest(identifier, symbolCharacter, functionType, address) {
+function createRequest(
+    identifier: number,
+    symbolCharacter: string,
+    functionType: string,
+    address: AddressObj
+): RPCRequest {
     const { address: value } = address;
     return {
         jsonrpc: "2.0",
@@ -57,7 +93,10 @@ function createRequest(identifier, symbolCharacter, functionType, address) {
     };
 }
 
-async function makeBatchRequest(requests, accessToken) {
+async function makeBatchRequest(
+    requests: RPCRequest[],
+    accessToken: string
+): Promise<Response[]> {
     const config = {
         method: "post",
         url: process.env.JAM_ETH_NODE_HTTPS,
@@ -71,9 +110,13 @@ async function makeBatchRequest(requests, accessToken) {
     return (await axios(config)).data;
 }
 
-async function makeChunkedRequest(requests, accessToken, numChunks) {
+async function makeChunkedRequest(
+    requests: RPCRequest[],
+    accessToken: string,
+    numChunks: number
+): Promise<Response[]> {
     let chunkStart = 0;
-    let chunks = [];
+    let chunks: Response[] = [];
     const constantSize = Math.floor(requests.length / numChunks);
     for (let i = 1; i <= numChunks; i++) {
         const previous = chunkStart;
@@ -94,7 +137,11 @@ async function makeChunkedRequest(requests, accessToken, numChunks) {
     return chunks;
 }
 
-async function parseResponses(responses, addresses, utils) {
+async function parseResponses(
+    responses: Response[],
+    addresses: AddressObj[],
+    utils: Web3Utils
+) {
     responses.forEach((response) => {
         const { result, id } = response;
         if (!result || result === "0x") return;
@@ -106,14 +153,16 @@ async function parseResponses(responses, addresses, utils) {
                 break;
             case "s":
                 addresses[index].symbol = nameSymbolHelper(utils, response);
+                break;
             case "d":
                 addresses[index].decimals = decimalHelper(utils, response);
+                break;
         }
     });
     return addresses;
 }
 
-export function getDataset(blockchain) {
+export function getDataset(blockchain: string) {
     switch (blockchain) {
         case "ethereum":
             return "ethereum_v2";
@@ -122,24 +171,27 @@ export function getDataset(blockchain) {
     }
 }
 
-async function encodeFnSignatures(utils) {
+async function encodeFnSignatures(utils: Web3Utils): Promise<TokenSignature> {
     const ethereum = await utils.getEthereum();
     const { abi } = ethereum;
     const { encodeFunctionSignature } = abi;
     return {
         nameFn: encodeFunctionSignature(
-            IERC20.abi.filter((obj) => obj.name === "name")[0]
+            IERC20.abi.filter((obj) => obj.name === "name")[0] as AbiItem
         ),
         symbolFn: encodeFunctionSignature(
-            IERC20.abi.filter((obj) => obj.name === "symbol")[0]
+            IERC20.abi.filter((obj) => obj.name === "symbol")[0] as AbiItem
         ),
         decimalsFn: encodeFunctionSignature(
-            IERC20.abi.filter((obj) => obj.name === "decimals")[0]
+            IERC20.abi.filter((obj) => obj.name === "decimals")[0] as AbiItem
         ),
     };
 }
 
-function nameSymbolHelper({ getUtilities }, response) {
+function nameSymbolHelper(
+    { getUtilities }: Web3Utils,
+    response: Response
+): string | null {
     const { result } = response;
     const { hexToUtf8, stripHexPrefix } = getUtilities();
     const nameHex = stripHexPrefix(result).substring(128);
@@ -148,13 +200,16 @@ function nameSymbolHelper({ getUtilities }, response) {
         : hexToUtf8("0x" + nameHex);
 }
 
-function decimalHelper({ getUtilities }, response) {
+function decimalHelper(
+    { getUtilities }: Web3Utils,
+    response: Response
+): number | null {
     const { result } = response;
     const { hexToNumberString, hexToNumber } = getUtilities();
     return hexToNumberString(result).length > 2 ? null : hexToNumber(result);
 }
 
-export function getResponse(message) {
+export function getResponse(message: string) {
     return {
         success: true,
         message,
