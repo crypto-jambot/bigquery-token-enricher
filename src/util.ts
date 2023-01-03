@@ -1,6 +1,7 @@
 import axios from "axios";
 import IERC20 from "@openzeppelin/contracts/build/contracts/ERC20.json";
 import { BigQueryUtil } from "@crypto-jambot/bigquery-utils";
+import * as https from "https";
 
 const projectId = process.env.PROJECT_ID;
 const { query } = new BigQueryUtil({ projectId });
@@ -106,6 +107,7 @@ async function makeBatchRequest(
         },
         maxBodyLength: Infinity,
         data: JSON.stringify(requests),
+        httpsAgent: new https.Agent({ keepAlive: true }),
     };
     return (await axios(config)).data;
 }
