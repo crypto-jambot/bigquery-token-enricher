@@ -26,6 +26,8 @@ steps:
         '$_REGION',
         '--service-account',
         '$_SERVICE_ACCOUNT',
+        '--timeout',
+        '$_TIMEOUT',
         '--set-env-vars',
         'API_SECRET_KEY=${_API_SECRET_KEY}',
         '--set-env-vars',
@@ -44,6 +46,7 @@ substitutions:
   _NPM_SECRET_KEY: npm-token-key
   _REGISTRY_URL: https://npm.pkg.github.com/
   _JAM_ETH_NODE_HTTPS: https://rabbit.dev/
+  _TIMEOUT: 10m
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_NUMBER/secrets/$_NPM_SECRET_KEY/versions/$_SECRET_VERSION
