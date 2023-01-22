@@ -3,9 +3,8 @@ import { Web3Utils } from "@crypto-jambot/web3-utils";
 import { BigQueryUtil } from "@crypto-jambot/bigquery-utils";
 import { SecretUtil } from "@crypto-jambot/secret-manager-utils";
 
-const projectId = process.env.PROJECT_ID;
-const util = new BigQueryUtil({ projectId });
-const secretUtil = new SecretUtil({ projectId });
+const util = new BigQueryUtil();
+const secretUtil = new SecretUtil();
 type RequestBody = {
     blockchain: string;
     numberToProcess?: number;
