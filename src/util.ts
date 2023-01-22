@@ -3,8 +3,7 @@ import IERC20 from "@openzeppelin/contracts/build/contracts/ERC20.json";
 import { BigQueryUtil } from "@crypto-jambot/bigquery-utils";
 import * as https from "https";
 
-const projectId = process.env.PROJECT_ID;
-const util = new BigQueryUtil({ projectId });
+const util = new BigQueryUtil();
 import { Web3Utils, AbiItem } from "@crypto-jambot/web3-utils";
 
 type Token = { token_address: string };
