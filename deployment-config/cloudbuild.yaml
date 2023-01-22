@@ -45,7 +45,7 @@ substitutions:
   _API_SECRET_KEY: api-secret-key
   _NPM_SECRET_KEY: npm-token-key
   _REGISTRY_URL: https://npm.pkg.github.com/
-  _JAM_ETH_NODE_HTTPS: https://rabbit.dev/
+  _JAM_ETH_NODE_HTTPS: https://rabbit.dev/http
   _TIMEOUT: 30m
 availableSecrets:
   secretManager:
