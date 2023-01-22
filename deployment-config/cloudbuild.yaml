@@ -32,8 +32,6 @@ steps:
         'API_SECRET_KEY=${_API_SECRET_KEY}',
         '--set-env-vars',
         'JAM_ETH_NODE_HTTPS=${_JAM_ETH_NODE_HTTPS}',
-        '--set-env-vars',
-        'PROJECT_ID=${PROJECT_ID}',
       ]
 images:
   - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA
