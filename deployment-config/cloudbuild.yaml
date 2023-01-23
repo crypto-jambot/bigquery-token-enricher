@@ -32,8 +32,6 @@ steps:
         'API_SECRET_KEY=${_API_SECRET_KEY}',
         '--set-env-vars',
         'JAM_ETH_NODE_HTTPS=${_JAM_ETH_NODE_HTTPS}',
-        '--set-env-vars',
-        'PROJECT_ID=${PROJECT_ID}',
       ]
 images:
   - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA
@@ -45,7 +43,7 @@ substitutions:
   _API_SECRET_KEY: api-secret-key
   _NPM_SECRET_KEY: npm-token-key
   _REGISTRY_URL: https://npm.pkg.github.com/
-  _JAM_ETH_NODE_HTTPS: https://rabbit.dev/
+  _JAM_ETH_NODE_HTTPS: https://rabbit.dev/http
   _TIMEOUT: 30m
 availableSecrets:
   secretManager:

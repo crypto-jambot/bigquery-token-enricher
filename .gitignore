@@ -105,6 +105,7 @@ dist
 
 #IDE files
 .idea/
+.DS_Store
 
 #Production Ignore
 package-lock.json
